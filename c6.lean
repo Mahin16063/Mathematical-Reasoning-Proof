@@ -1,5 +1,6 @@
 /- Copyright (c) Heather Macbeth, 2022.  All rights reserved. -/
 import Mathlib.Data.Nat.Basic
+import Mathlib.Data.Int.ModEq
 import Library.Basic
 
 math2001_init
@@ -17,52 +18,47 @@ lemma dvd_multiple_minus_multiple {a b c : ℤ} (h1 : c ∣ a - b) (h2 : c ∣ b
 /-- If 3 ∤ n, then 13 ∣ (3 ^ (2 * n) + 3 ^ n + 1) -/
 
 theorem div_by_thirteen (n : ℕ) (h : ¬ (3 : ℤ) ∣ n) :
-  13 ∣ (3 ^ (2 * n) + 3 ^ n + 1) := by 
-  have h1 : ∀ b, 3 ^ (3 * b) ≡ 1 [ZMOD 13] := by
+    13 ∣ (3 ^ (2 * n) + 3 ^ n + 1) := by
+
+  have h1 : ∀ (b : ℕ), 3 ^ (3 * b) ≡ 1 [ZMOD 13] := by
     intro b
-    have base : 3 ^ 3 ≡ 1 [ZMOD 13] := by -- not sure if it should be like this Teo --
-      calc
-        3 ^ 3 = 27 := by ring
-        _ = 26 + 1 := by ring
-        _ ≡ 1 [ZMOD 13] := by use 2
-      calc
-        3 ^ (3 * b) = (3 ^ 3) ^ b := by sorry
-        _ ≡ 1 ^ b [ZMOD 13] := by sorry
-        _ ≡ 1 [ZMOD 13] := by ring
+    have base : 3 ^ 3 ≡ 1 [ZMOD 13] := by exact rfl
+    calc
+      3 ^ (3 * b) = (3 ^ 3) ^ b := by exact pow_mul 3 3 b
+      _ ≡ 1 ^ b [ZMOD 13] := by exact Int.ModEq.pow b base
+      _ ≡ 1 [ZMOD 13] := by norm_num
+
   have h2 : ∃k : ℕ, n = 3 * k + 1 ∨ n = 3 * k + 2 := by
-    obtain ⟨k, hk⟩ : ∃ k, n = 3 * k ∨ n = 3 * k + 1 ∨ n = 3 * k + 2 := by
-      exact nat.exists_eq_add_of_lt (Nat.mod_lt n (by norm_num : 0 < 3))
-    sorry -- I think there has to be something else here, don't know how to continue Teo --
+    sorry
   obtain ⟨k, hk⟩ := h2
   obtain h3 | h3 := hk
   . have h4 : 3 ^ (2 * 3 * k) * 3 ^ 2 ≡ 3 ^ 2 [ZMOD 13] := by
       calc
-        3 ^ (2 * 3 * k) * 3 ^ 2
-          ≡ (3 ^ (3 * k)) ^ 2 * 3 ^ 2 [ZMOD 13] := by sorry
-        _ ≡ 1 ^ 2 * 3 ^ 2 [ZMOD 13] := by sorry
-        _ ≡ 3 ^ 2 [ZMOD 13] := by numbers
+        3 ^ (2 * (3 * k)) * 3 ^ 2 ≡ (3 ^ (3 * k)) ^ 2 * 3 ^ 2 [ZMOD 13] := by sorry
+        _ ≡ 1 ^ 2 * 3 ^ 2 [ZMOD 13] := by rw [h1, k]
+        _ ≡ 3 ^ 2 [ZMOD 13] := by norm_num
     have h5 : 3 ^ (3 * k) * 3 ≡ 3 [ZMOD 13] := by
       calc
-        3 ^ (3 * k) * 3 ≡ 1 * 3 [ZMOD 13] := by sorry
-        _ ≡ 3 [ZMOD 13] := by numbers
+        3 ^ (3 * k) * 3 ≡ 1 * 3 [ZMOD 13] := by exact Int.ModEq.mul (h1 k) rfl
+        _ ≡ 3 [ZMOD 13] := by norm_num
     calc
-      3 ^ (2 * (3 * k + 1)) + 3 ^ (3 * k + 1) + 1 
+      3 ^ (2 * (3 * k + 1)) + 3 ^ (3 * k + 1) + 1
         ≡ 3 ^ (2 * 3 * k) * 3 ^ 2 + 3 ^ (3 * k) * 3 + 1 [ZMOD 13] := by sorry
-        _ ≡ 3 ^ 2 + 3 + 1 [ZMOD 13] := by rw [h4, h5]
-        _ ≡ 0 [ZMOD 13] := by numbers
-    exact Int.ModEq.dvd 
+        _ ≡ 3 ^ 2 + 3 + 1 [ZMOD 13] := by sorry
+        _ ≡ 0 [ZMOD 13] := by exact rfl
+    exact Int.ModEq.dvd (by norm_num)
   . have h4 : 3 ^ (2 * 3 * k) * 3 ^ 2 ≡ 3 ^ 2 [ZMOD 13] := by
       calc
-        3 ^ (3 * k) * 3 ^ 2 ≡ (3 ^ (3 * k)) ^ 2 * 3 ^ 4 [ZMOD 13] := by sorry
-        _ ≡ 1 ^ 2 * 3 ^ 4 [ZMOD 13] := by sorry
-        _ ≡ 3 ^ 4 [ZMOD 13] := by numbers
+        3 ^ (2 * 3 * k) * 3 ^ 4 ≡ (3 ^ (3 * k)) ^ 2 * 3 ^ 4 [ZMOD 13] := by sorry 
+        _ ≡ 1 ^ 2 * 3 ^ 4 [ZMOD 13] := by rw [h1, k]
+        _ ≡ 3 ^ 4 [ZMOD 13] := by norm_num
     have h5 : 3 ^ (3 * k) * 3 ≡ 3 [ZMOD 13] := by
       calc
-        3 ^ (3 * k) * 3 ^ 2 ≡ 1 * 3 ^ 2 [ZMOD 13] := by sorry
-        _ ≡ 3 ^ 2 [ZMOD 13] := by numbers
+      3 ^ (3 * k) * 3 ^ 2 ≡ 1 * 3 ^ 2 [ZMOD 13] := by rw [h1, k]
+        _ ≡ 3 ^ 2 [ZMOD 13] := by norm_num
     calc
       3 ^ (2 * (3 * k + 2)) + 3 ^ (3 * k + 2) + 1
         ≡ 3 ^ (2 * 3 * k) * 3 ^ 4 + 3 ^ (3 * k) * 3 ^ 2 + 1 [ZMOD 13] := by sorry
-        _ ≡ 3 ^ 4 + 3 ^ 2 + 1 [ZMOD 13] := by rw [h4, h5]
-        _ ≡ 0 [ZMOD 13] := by numbers
-    exact Int. ModEq.dvd 
+        _ ≡ 3 ^ 4 + 3 ^ 2 + 1 [ZMOD 13] := by sorry
+        _ ≡ 0 [ZMOD 13] := by exact rfl
+    exact Int.ModEq.dvd (by norm_num)
