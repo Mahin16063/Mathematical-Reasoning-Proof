@@ -20,14 +20,14 @@ theorem div_by_thirteen (n : ℕ) (h : ¬ (3 : ℤ) ∣ n) :
   13 ∣ (3 ^ (2 * n) + 3 ^ n + 1) := by 
   have h1 : ∀ b, 3 ^ (3 * b) ≡ 1 [ZMOD 13] := by
     intro b
-    have base : 3 ^ 3 ≡ 1 [ZMOD 13] := by
+    have base : 3 ^ 3 ≡ 1 [ZMOD 13] := by -- not sure if this is needed --
       calc
         3 ^ 3 = 27 := by ring
         _ = 26 + 1 := by ring
         _ ≡ 1 [ZMOD 13] := by use 2
       calc
-        3 ^ (3 * b) = (3 ^ 3) ^ b := by rw [pow_mul]
-        _ ≡ 1 ^ b [ZMOD 13] := by rw [base]
+        3 ^ (3 * b) = (3 ^ 3) ^ b := by sorry
+        _ ≡ 1 ^ b [ZMOD 13] := by sorry
         _ ≡ 1 [ZMOD 13] := by ring
   have h2 : ∃k : ℕ, n = 3 * k + 1 ∨ n = 3 * k + 2 := by
     sorry
