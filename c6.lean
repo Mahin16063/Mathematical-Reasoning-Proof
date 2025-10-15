@@ -20,7 +20,7 @@ theorem div_by_thirteen (n : ℕ) (h : ¬ (3 : ℤ) ∣ n) :
   13 ∣ (3 ^ (2 * n) + 3 ^ n + 1) := by 
   have h1 : ∀ b, 3 ^ (3 * b) ≡ 1 [ZMOD 13] := by
     intro b
-    have base : 3 ^ 3 ≡ 1 [ZMOD 13] := by -- not sure if this is needed --
+    have base : 3 ^ 3 ≡ 1 [ZMOD 13] := by -- not sure if it should be like this Teo --
       calc
         3 ^ 3 = 27 := by ring
         _ = 26 + 1 := by ring
@@ -30,7 +30,9 @@ theorem div_by_thirteen (n : ℕ) (h : ¬ (3 : ℤ) ∣ n) :
         _ ≡ 1 ^ b [ZMOD 13] := by sorry
         _ ≡ 1 [ZMOD 13] := by ring
   have h2 : ∃k : ℕ, n = 3 * k + 1 ∨ n = 3 * k + 2 := by
-    sorry
+    obtain ⟨k, hk⟩ : ∃ k, n = 3 * k ∨ n = 3 * k + 1 ∨ n = 3 * k + 2 := by
+      exact nat.exists_eq_add_of_lt (Nat.mod_lt n (by norm_num : 0 < 3))
+    sorry -- I think there has to be something else here, don't know how to continue Teo --
   obtain ⟨k, hk⟩ := h2
   obtain h3 | h3 := hk
   . have h4 : 3 ^ (2 * 3 * k) * 3 ^ 2 ≡ 3 ^ 2 [ZMOD 13] := by
