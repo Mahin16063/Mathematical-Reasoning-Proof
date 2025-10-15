@@ -36,13 +36,8 @@ theorem div_by_thirteen (n : ℕ) (h : ¬ (3 : ℤ) ∣ n) :
   obtain ⟨k, hk⟩ := h2
   obtain h3 | h3 := hk
   . have h4 : 3 ^ (2 * 3 * k) * 3 ^ 2 ≡ 3 ^ 2 [ZMOD 13] := by
-      rw [h3]
-      calc
-        3 ^ (2 * (3 * k + 1)) + 3 ^ (3 * k + 2) + 1 
-          ≡ (3 ^ (3 * k)) ^ 2 * 3 ^ 4 + (3 ^ (3 * k)) * 3 ^ 2 + 1 [ZMOD 13] := by sorry
-        _ ≡ 3 ^ 4 + 3 ^ 2 + 1 [ZMOD 13] := by sorry
-        _ ≡ 0 [ZMOD 13] := by numbers 
-      exact Int.ModEq.dvd h4
+      sorry
+    sorry
     have h5 : 3 ^ (3 * k) * 3 ≡ 3 [ZMOD 13] := by
       sorry
     sorry
@@ -51,7 +46,6 @@ theorem div_by_thirteen (n : ℕ) (h : ¬ (3 : ℤ) ∣ n) :
     have h5 : 3 ^ (3 * k) * 3 ≡ 3 [ZMOD 13] := by
       sorry
     sorry
-
     have h5 : 3 ^ (3 * k) * 3 ≡ 3 [ZMOD 13] := by
       sorry
     sorry
